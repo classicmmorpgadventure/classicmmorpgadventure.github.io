@@ -506,21 +506,21 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 .to-top{font-size:14px;color:var(--gold)}
 
 
-/* ---- ambient critters (sprite sheets) ---- */
+/* ---- ambient critters (calm, walk frames only) ---- */
 #critters{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
 .critter{
   position:absolute;image-rendering:pixelated;image-rendering:crisp-edges;
-  will-change:transform,left,top;opacity:0;
+  opacity:0;transition:opacity .8s ease;
 }
-.critter.fly{opacity:1}
-.critter-queen-wrap{position:absolute;opacity:0;pointer-events:none}
-.critter-queen-wrap.show{opacity:1;transition:opacity .4s}
+.critter.show{opacity:1}
+.critter-queen-wrap{position:absolute;opacity:0;transition:opacity .9s ease;pointer-events:none}
+.critter-queen-wrap.show{opacity:1}
 .critter-queen-wrap img{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 .critter-hello{
-  position:absolute;left:50%;bottom:100%;transform:translate(-50%,-8px);
-  font-family:var(--f-pixel);font-size:14px;letter-spacing:.04em;
-  color:#1a1208;background:var(--gold-hi);padding:5px 10px;border-radius:8px;
-  white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.4);
+  position:absolute;left:50%;bottom:100%;transform:translate(-50%,-10px);
+  font-family:var(--f-pixel);font-size:15px;letter-spacing:.06em;
+  color:#1a1208;background:var(--gold-hi);padding:6px 12px;border-radius:10px;
+  white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);
 }
 .critter-hello::after{
   content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;
@@ -929,27 +929,29 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
     if (document.hidden) cancelAnimationFrame(raf); else frame();
   });
 
-  // Ambient critters from sprite sheets
+
+
+  // Ambient critters — calm loops, walk frames 1-4 only
   (function(){
     if (reduce) return;
     var root = document.getElementById('critters');
     if (!root) return;
     var BASE = 'images/critters/';
+    // Only _0.._3 (sheet frames 1-4). Motion comes from the art, not fake bounce.
     var kinds = {
-      bumblekin: {n:8, fps:10, w:56},
-      angry1: {n:8, fps:11, w:58},
-      angry2: {n:8, fps:11, w:58},
-      slime: {n:8, fps:8, w:48},
-      moss: {n:8, fps:8, w:50},
-      rotten: {n:8, fps:8, w:52}
+      bumblekin: {n:4, fps:4, w:48},
+      angry1: {n:4, fps:4, w:50},
+      angry2: {n:4, fps:4, w:50},
+      slime: {n:4, fps:3.5, w:42},
+      moss: {n:4, fps:3.5, w:44},
+      rotten: {n:4, fps:3.5, w:46}
     };
     var flyers = [];
     var hoppers = [];
     var queen = null;
-    var queenTimer = 0;
-    var nextQueen = 12000 + Math.random()*18000;
-    var nextFlyer = 800;
-    var nextHopper = 2500;
+    var nextFlyer = 5000;
+    var nextHopper = 11000;
+    var nextQueen = 28000 + Math.random()*20000;
 
     function makeSprite(kind){
       var meta = kinds[kind];
@@ -967,34 +969,36 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
     }
 
     function spawnFlyer(){
-      var pool = ['bumblekin','bumblekin','angry1','angry2'];
+      // Prefer friendly bumblekin
+      var pool = ['bumblekin','bumblekin','bumblekin','angry1','angry2'];
       var kind = pool[(Math.random()*pool.length)|0];
       var img = makeSprite(kind);
       var fromLeft = Math.random() < 0.5;
-      var y = 40 + Math.random() * (window.innerHeight * 0.55);
-      var x = fromLeft ? -80 : window.innerWidth + 80;
-      var speed = (0.35 + Math.random()*0.55) * (fromLeft ? 1 : -1);
-      var bob = Math.random()*Math.PI*2;
-      var bobSp = 0.04 + Math.random()*0.03;
+      var y = 70 + Math.random() * Math.min(280, window.innerHeight * 0.4);
+      var x = fromLeft ? -70 : window.innerWidth + 70;
+      // Slow drift — no vertical bob; wing/body motion is in the frames
+      var speed = (0.12 + Math.random()*0.1) * (fromLeft ? 1 : -1);
       img.style.left = x + 'px';
       img.style.top = y + 'px';
       img.style.transform = fromLeft ? 'scaleX(1)' : 'scaleX(-1)';
-      img.classList.add('fly');
       root.appendChild(img);
-      flyers.push({el:img, x:x, y:y, speed:speed, bob:bob, bobSp:bobSp, baseY:y, kind:kind});
+      // fade in
+      requestAnimationFrame(function(){ img.classList.add('show'); });
+      flyers.push({el:img, x:x, y:y, speed:speed});
     }
 
     function spawnHopper(){
       var pool = ['slime','moss','rotten'];
       var kind = pool[(Math.random()*pool.length)|0];
       var img = makeSprite(kind);
-      var x = 40 + Math.random() * (window.innerWidth - 100);
-      var y = window.innerHeight - (70 + Math.random()*40);
+      var x = 48 + Math.random() * Math.max(80, window.innerWidth - 120);
+      // Rest on the lower edge; hop distance comes from sprite frames only
+      var y = window.innerHeight - 56;
       img.style.left = x + 'px';
       img.style.top = y + 'px';
-      img.classList.add('fly');
       root.appendChild(img);
-      hoppers.push({el:img, x:x, y:y, life:0, max:4000+Math.random()*3000, kind:kind, hop:0});
+      requestAnimationFrame(function(){ img.classList.add('show'); });
+      hoppers.push({el:img, x:x, y:y, life:0, max:7000 + Math.random()*4000});
     }
 
     function ensureQueen(){
@@ -1003,10 +1007,11 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       wrap.className = 'critter-queen-wrap';
       var img = document.createElement('img');
       img.alt = '';
-      img.width = 96;
+      img.width = 128; // a bit bigger
+      img.dataset.kind = 'queen';
       img.dataset.frame = '0';
       img.dataset.n = '4';
-      img.dataset.fps = '7';
+      img.dataset.fps = '3.5';
       img.dataset.acc = '0';
       img.src = BASE + 'queen_0.png';
       var hello = document.createElement('div');
@@ -1015,15 +1020,15 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       wrap.appendChild(hello);
       wrap.appendChild(img);
       root.appendChild(wrap);
-      queen = {wrap:wrap, el:img, x:0, y:0, phase:'idle', t:0};
+      queen = {wrap:wrap, el:img, x:0, y:0, phase:'idle', t:0, dir:1, targetX:0};
     }
 
     function showQueen(){
       ensureQueen();
       var fromLeft = Math.random() < 0.5;
-      queen.x = fromLeft ? -120 : window.innerWidth + 120;
-      queen.y = 80 + Math.random() * (window.innerHeight * 0.35);
-      queen.targetX = fromLeft ? (60 + Math.random()*120) : (window.innerWidth - 180 - Math.random()*80);
+      queen.x = fromLeft ? -140 : window.innerWidth + 140;
+      queen.y = 90 + Math.random() * Math.min(200, window.innerHeight * 0.28);
+      queen.targetX = fromLeft ? (80 + Math.random()*100) : (window.innerWidth - 200 - Math.random()*80);
       queen.dir = fromLeft ? 1 : -1;
       queen.phase = 'enter';
       queen.t = 0;
@@ -1034,72 +1039,70 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
     }
 
     function tickFrame(el, dt){
-      var fps = +el.dataset.fps || 10;
-      var n = +el.dataset.n || 8;
+      var fps = +el.dataset.fps || 4;
+      var n = Math.min(4, +el.dataset.n || 4);
       var acc = (+el.dataset.acc || 0) + dt;
       var frame = +el.dataset.frame || 0;
       var step = 1000 / fps;
+      var changed = false;
       while (acc >= step) {
         acc -= step;
         frame = (frame + 1) % n;
+        changed = true;
       }
       el.dataset.acc = String(acc);
-      if (String(frame) !== el.dataset.frame) {
+      if (changed) {
         el.dataset.frame = String(frame);
-        var kind = el.dataset.kind || 'queen';
-        if (el.dataset.kind) el.src = BASE + kind + '_' + frame + '.png';
-        else el.src = BASE + 'queen_' + frame + '.png';
+        el.src = BASE + (el.dataset.kind || 'queen') + '_' + frame + '.png';
       }
     }
 
     var last = performance.now();
     function loop(now){
-      var dt = Math.min(64, now - last);
+      var dt = Math.min(50, now - last);
       last = now;
       nextFlyer -= dt;
       nextHopper -= dt;
       nextQueen -= dt;
-      if (nextFlyer <= 0 && flyers.length < 4) {
+
+      if (nextFlyer <= 0 && flyers.length < 1) {
         spawnFlyer();
-        nextFlyer = 2200 + Math.random()*3500;
+        nextFlyer = 9000 + Math.random()*10000;
       }
-      if (nextHopper <= 0 && hoppers.length < 2) {
+      if (nextHopper <= 0 && hoppers.length < 1) {
         spawnHopper();
-        nextHopper = 5000 + Math.random()*6000;
+        nextHopper = 16000 + Math.random()*14000;
       }
       if (nextQueen <= 0 && (!queen || queen.phase === 'idle')) {
         showQueen();
-        nextQueen = 25000 + Math.random()*40000;
+        nextQueen = 55000 + Math.random()*50000;
       }
 
-      for (var i=flyers.length-1;i>=0;i--){
+      for (var i = flyers.length - 1; i >= 0; i--) {
         var f = flyers[i];
-        f.x += f.speed * dt * 0.06;
-        f.bob += f.bobSp;
-        var yy = f.baseY + Math.sin(f.bob)*14;
+        f.x += f.speed * dt * 0.045;
         f.el.style.left = f.x + 'px';
-        f.el.style.top = yy + 'px';
+        // steady height — sprite carries the life
+        f.el.style.top = f.y + 'px';
         tickFrame(f.el, dt);
-        if ((f.speed > 0 && f.x > window.innerWidth + 100) || (f.speed < 0 && f.x < -100)) {
+        if ((f.speed > 0 && f.x > window.innerWidth + 90) || (f.speed < 0 && f.x < -90)) {
           f.el.remove();
-          flyers.splice(i,1);
+          flyers.splice(i, 1);
         }
       }
 
-      for (var j=hoppers.length-1;j>=0;j--){
+      for (var j = hoppers.length - 1; j >= 0; j--) {
         var h = hoppers[j];
         h.life += dt;
-        h.hop += dt;
-        var bounce = Math.abs(Math.sin(h.hop/180))*10;
-        h.el.style.top = (h.y - bounce) + 'px';
+        // Stay grounded; hop is in the 4-frame loop itself
+        h.el.style.top = h.y + 'px';
         tickFrame(h.el, dt);
         if (h.life > h.max) {
-          h.el.style.transition = 'opacity .5s';
-          h.el.style.opacity = '0';
-          (function(node, idx){
-            setTimeout(function(){ if (node.parentNode) node.remove(); }, 520);
-          })(h.el, j);
-          hoppers.splice(j,1);
+          h.el.classList.remove('show');
+          (function(node){
+            setTimeout(function(){ if (node.parentNode) node.remove(); }, 850);
+          })(h.el);
+          hoppers.splice(j, 1);
         }
       }
 
@@ -1107,14 +1110,14 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
         tickFrame(queen.el, dt);
         queen.t += dt;
         if (queen.phase === 'enter') {
-          queen.x += queen.dir * dt * 0.05;
+          queen.x += queen.dir * dt * 0.03;
           var arrived = (queen.dir > 0 && queen.x >= queen.targetX) || (queen.dir < 0 && queen.x <= queen.targetX);
           if (arrived) { queen.phase = 'talk'; queen.t = 0; }
         } else if (queen.phase === 'talk') {
-          if (queen.t > 2800) queen.phase = 'leave';
+          if (queen.t > 3600) queen.phase = 'leave';
         } else if (queen.phase === 'leave') {
-          queen.x += queen.dir * dt * 0.07;
-          if (queen.x < -160 || queen.x > window.innerWidth + 160) {
+          queen.x += queen.dir * dt * 0.04;
+          if (queen.x < -180 || queen.x > window.innerWidth + 180) {
             queen.wrap.classList.remove('show');
             queen.phase = 'idle';
           }
@@ -1127,6 +1130,8 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
     }
     requestAnimationFrame(loop);
   })();
+
+
 
 })();
 </script>
