@@ -10,7 +10,7 @@
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
 <meta name="theme-color" content="#0c0a12">
-<link rel="canonical" href="https://classicmmorpgadventure.netlify.app/">
+<link rel="canonical" href="https://classicmmorpgadventure.github.io/">
 
 <!-- Icons (slime frame 4) -->
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -23,8 +23,8 @@
 <meta property="og:site_name" content="Classic MMORPG Adventure">
 <meta property="og:title" content="Classic MMORPG Adventure — Devlog">
 <meta property="og:description" content="Devlog for a 2D side-scrolling RPG — current build notes, roadmap, and what the game is about.">
-<meta property="og:url" content="https://classicmmorpgadventure.netlify.app/">
-<meta property="og:image" content="https://classicmmorpgadventure.netlify.app/images/hero-bg.jpg">
+<meta property="og:url" content="https://classicmmorpgadventure.github.io/">
+<meta property="og:image" content="https://classicmmorpgadventure.github.io/images/hero-bg.jpg">
 <meta property="og:image:alt" content="Treehouse village mood art for Classic MMORPG Adventure">
 <meta property="og:locale" content="en_US">
 
@@ -32,7 +32,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Classic MMORPG Adventure — Devlog">
 <meta name="twitter:description" content="Devlog for Classic MMORPG Adventure. Build notes and roadmap.">
-<meta name="twitter:image" content="https://classicmmorpgadventure.netlify.app/images/hero-bg.jpg">
+<meta name="twitter:image" content="https://classicmmorpgadventure.github.io/images/hero-bg.jpg">
 
 <!-- Structured data for search engines -->
 <script type="application/ld+json">
@@ -43,7 +43,7 @@
       "@type": "WebSite",
       "name": "Classic MMORPG Adventure",
       "alternateName": ["Classic MMORPG Adventure Devlog", "CMA Devlog"],
-      "url": "https://classicmmorpgadventure.netlify.app/",
+      "url": "https://classicmmorpgadventure.github.io/",
       "description": "Official development log and roadmap for Classic MMORPG Adventure, a cozy 2D side-scrolling game built with Godot.",
       "inLanguage": "en"
     },
@@ -54,7 +54,7 @@
       "genre": ["RolePlaying", "Adventure", "SideScroller"],
       "gamePlatform": "PC",
       "author": { "@type": "Organization", "name": "Classic MMORPG Adventure" },
-      "url": "https://classicmmorpgadventure.netlify.app/"
+      "url": "https://classicmmorpgadventure.github.io/"
     }
   ]
 }
@@ -506,18 +506,25 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 .to-top{font-size:14px;color:var(--gold)}
 
 
-/* ---- ambient critters (calm, walk frames only) ---- */
+/* ---- ambient critters: registered 4-frame loops ---- */
 #critters{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
 .critter{
-  position:absolute;image-rendering:pixelated;image-rendering:crisp-edges;
-  opacity:0;transition:opacity .8s ease;
+  position:absolute;left:0;top:0;
+  background-repeat:no-repeat;
+  image-rendering:pixelated;image-rendering:crisp-edges;
+  opacity:0;transition:opacity .7s ease;
+  transform-origin:center center;
+  will-change:transform,opacity;
 }
 .critter.show{opacity:1}
-.critter-queen-wrap{position:absolute;opacity:0;transition:opacity .9s ease;pointer-events:none}
+.critter.ground{transform-origin:center bottom}
+.critter-queen-wrap{
+  position:absolute;left:0;top:0;opacity:0;transition:opacity .8s ease;pointer-events:none;
+}
 .critter-queen-wrap.show{opacity:1}
-.critter-queen-wrap img{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.critter-queen-wrap .critter{position:relative;opacity:1;transition:none}
 .critter-hello{
-  position:absolute;left:50%;bottom:100%;transform:translate(-50%,-10px);
+  position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);
   font-family:var(--f-pixel);font-size:15px;letter-spacing:.06em;
   color:#1a1208;background:var(--gold-hi);padding:6px 12px;border-radius:10px;
   white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);
@@ -931,135 +938,129 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 
 
 
-  // Ambient critters — calm loops, walk frames 1-4 only
+  // Ambient critters — registered sheets, frames 1-4 only
   (function(){
     if (reduce) return;
     var root = document.getElementById('critters');
     if (!root) return;
     var BASE = 'images/critters/';
-    // Only _0.._3 (sheet frames 1-4). Motion comes from the art, not fake bounce.
-    var kinds = {
-      bumblekin: {n:4, fps:4, w:48},
-      angry1: {n:4, fps:4, w:50},
-      angry2: {n:4, fps:4, w:50},
-      slime: {n:4, fps:3.5, w:42},
-      moss: {n:4, fps:3.5, w:44},
-      rotten: {n:4, fps:3.5, w:46}
+    // Display size matches the pre-aligned sheet cell. fps is the loop rate.
+    var META = {
+      bumblekin: {w:56, h:56, fps:5},
+      angry1:    {w:51, h:56, fps:5},
+      angry2:    {w:57, h:56, fps:5},
+      queen:     {w:160, h:148, fps:4},
+      slime:     {w:64, h:44, fps:4},
+      moss:      {w:56, h:48, fps:4},
+      rotten:    {w:56, h:52, fps:4}
     };
     var flyers = [];
     var hoppers = [];
     var queen = null;
-    var nextFlyer = 5000;
-    var nextHopper = 11000;
-    var nextQueen = 28000 + Math.random()*20000;
+    var nextFlyer = 4500;
+    var nextHopper = 9000;
+    var nextQueen = 26000 + Math.random()*18000;
 
-    function makeSprite(kind){
-      var meta = kinds[kind];
-      var img = document.createElement('img');
-      img.className = 'critter';
-      img.alt = '';
-      img.width = meta.w;
-      img.dataset.kind = kind;
-      img.dataset.frame = '0';
-      img.dataset.n = String(meta.n);
-      img.dataset.fps = String(meta.fps);
-      img.dataset.acc = '0';
-      img.src = BASE + kind + '_0.png';
-      return img;
+    function paint(el, kind){
+      var m = META[kind];
+      el.dataset.kind = kind;
+      el.dataset.frame = '0';
+      el.dataset.fps = String(m.fps);
+      el.dataset.acc = '0';
+      el.style.width = m.w + 'px';
+      el.style.height = m.h + 'px';
+      el.style.backgroundImage = 'url("' + BASE + kind + '_sheet.png")';
+      el.style.backgroundSize = (m.w * 4) + 'px ' + m.h + 'px';
+      el.style.backgroundPosition = '0 0';
+    }
+
+    function tickFrame(el, dt){
+      var m = META[el.dataset.kind];
+      if (!m) return;
+      var acc = (+el.dataset.acc || 0) + dt;
+      var step = 1000 / m.fps;
+      if (acc < step) { el.dataset.acc = String(acc); return; }
+      acc -= step;
+      if (acc > step) acc = acc % step;
+      var frame = ((+el.dataset.frame || 0) + 1) % 4;
+      el.dataset.frame = String(frame);
+      el.dataset.acc = String(acc);
+      el.style.backgroundPosition = (-frame * m.w) + 'px 0px';
+    }
+
+    function place(el, x, y, face){
+      var sx = face < 0 ? -1 : 1;
+      el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) scaleX(' + sx + ')';
     }
 
     function spawnFlyer(){
-      // Prefer friendly bumblekin
       var pool = ['bumblekin','bumblekin','bumblekin','angry1','angry2'];
       var kind = pool[(Math.random()*pool.length)|0];
-      var img = makeSprite(kind);
+      var m = META[kind];
+      var el = document.createElement('div');
+      el.className = 'critter';
+      paint(el, kind);
       var fromLeft = Math.random() < 0.5;
-      var y = 70 + Math.random() * Math.min(280, window.innerHeight * 0.4);
-      var x = fromLeft ? -70 : window.innerWidth + 70;
-      // Slow drift — no vertical bob; wing/body motion is in the frames
-      var speed = (0.12 + Math.random()*0.1) * (fromLeft ? 1 : -1);
-      img.style.left = x + 'px';
-      img.style.top = y + 'px';
-      img.style.transform = fromLeft ? 'scaleX(1)' : 'scaleX(-1)';
-      root.appendChild(img);
-      // fade in
-      requestAnimationFrame(function(){ img.classList.add('show'); });
-      flyers.push({el:img, x:x, y:y, speed:speed});
+      var y = 64 + Math.random() * Math.min(240, window.innerHeight * 0.36);
+      var x = fromLeft ? -m.w - 12 : window.innerWidth + 12;
+      var face = fromLeft ? 1 : -1;
+      var speed = (26 + Math.random()*14) * face; // px / sec, no bob
+      place(el, x, y, face);
+      root.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('show'); });
+      flyers.push({el:el, x:x, y:y, speed:speed, face:face, w:m.w});
     }
 
     function spawnHopper(){
       var pool = ['slime','moss','rotten'];
       var kind = pool[(Math.random()*pool.length)|0];
-      var img = makeSprite(kind);
-      var x = 48 + Math.random() * Math.max(80, window.innerWidth - 120);
-      // Rest on the lower edge; hop distance comes from sprite frames only
-      var y = window.innerHeight - 56;
-      img.style.left = x + 'px';
-      img.style.top = y + 'px';
-      root.appendChild(img);
-      requestAnimationFrame(function(){ img.classList.add('show'); });
-      hoppers.push({el:img, x:x, y:y, life:0, max:7000 + Math.random()*4000});
+      var m = META[kind];
+      var el = document.createElement('div');
+      el.className = 'critter ground';
+      paint(el, kind);
+      var x = 36 + Math.random() * Math.max(40, window.innerWidth - m.w - 72);
+      var y = window.innerHeight - m.h - 18;
+      place(el, x, y, 1);
+      root.appendChild(el);
+      requestAnimationFrame(function(){ el.classList.add('show'); });
+      hoppers.push({el:el, x:x, y:y, life:0, max:7200 + Math.random()*2800});
     }
 
     function ensureQueen(){
       if (queen) return;
       var wrap = document.createElement('div');
       wrap.className = 'critter-queen-wrap';
-      var img = document.createElement('img');
-      img.alt = '';
-      img.width = 128; // a bit bigger
-      img.dataset.kind = 'queen';
-      img.dataset.frame = '0';
-      img.dataset.n = '4';
-      img.dataset.fps = '3.5';
-      img.dataset.acc = '0';
-      img.src = BASE + 'queen_0.png';
       var hello = document.createElement('div');
       hello.className = 'critter-hello';
       hello.textContent = 'Hello';
+      var el = document.createElement('div');
+      el.className = 'critter';
+      paint(el, 'queen');
       wrap.appendChild(hello);
-      wrap.appendChild(img);
+      wrap.appendChild(el);
       root.appendChild(wrap);
-      queen = {wrap:wrap, el:img, x:0, y:0, phase:'idle', t:0, dir:1, targetX:0};
+      queen = {wrap:wrap, el:el, x:0, y:0, phase:'idle', t:0, dir:1, targetX:0, face:1};
     }
 
     function showQueen(){
       ensureQueen();
+      var m = META.queen;
       var fromLeft = Math.random() < 0.5;
-      queen.x = fromLeft ? -140 : window.innerWidth + 140;
-      queen.y = 90 + Math.random() * Math.min(200, window.innerHeight * 0.28);
-      queen.targetX = fromLeft ? (80 + Math.random()*100) : (window.innerWidth - 200 - Math.random()*80);
+      queen.x = fromLeft ? -m.w - 20 : window.innerWidth + 20;
+      queen.y = 72 + Math.random() * Math.min(160, window.innerHeight * 0.22);
+      queen.targetX = fromLeft ? (48 + Math.random()*80) : (window.innerWidth - m.w - 48 - Math.random()*60);
       queen.dir = fromLeft ? 1 : -1;
+      queen.face = queen.dir;
       queen.phase = 'enter';
       queen.t = 0;
-      queen.wrap.style.left = queen.x + 'px';
-      queen.wrap.style.top = queen.y + 'px';
-      queen.el.style.transform = fromLeft ? 'scaleX(1)' : 'scaleX(-1)';
+      queen.el.style.transform = 'scaleX(' + queen.face + ')';
+      queen.wrap.style.transform = 'translate3d(' + Math.round(queen.x) + 'px,' + Math.round(queen.y) + 'px,0)';
       queen.wrap.classList.add('show');
-    }
-
-    function tickFrame(el, dt){
-      var fps = +el.dataset.fps || 4;
-      var n = Math.min(4, +el.dataset.n || 4);
-      var acc = (+el.dataset.acc || 0) + dt;
-      var frame = +el.dataset.frame || 0;
-      var step = 1000 / fps;
-      var changed = false;
-      while (acc >= step) {
-        acc -= step;
-        frame = (frame + 1) % n;
-        changed = true;
-      }
-      el.dataset.acc = String(acc);
-      if (changed) {
-        el.dataset.frame = String(frame);
-        el.src = BASE + (el.dataset.kind || 'queen') + '_' + frame + '.png';
-      }
     }
 
     var last = performance.now();
     function loop(now){
-      var dt = Math.min(50, now - last);
+      var dt = Math.min(40, now - last);
       last = now;
       nextFlyer -= dt;
       nextHopper -= dt;
@@ -1067,25 +1068,23 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 
       if (nextFlyer <= 0 && flyers.length < 1) {
         spawnFlyer();
-        nextFlyer = 9000 + Math.random()*10000;
+        nextFlyer = 11000 + Math.random()*9000;
       }
       if (nextHopper <= 0 && hoppers.length < 1) {
         spawnHopper();
-        nextHopper = 16000 + Math.random()*14000;
+        nextHopper = 14000 + Math.random()*12000;
       }
       if (nextQueen <= 0 && (!queen || queen.phase === 'idle')) {
         showQueen();
-        nextQueen = 55000 + Math.random()*50000;
+        nextQueen = 52000 + Math.random()*40000;
       }
 
       for (var i = flyers.length - 1; i >= 0; i--) {
         var f = flyers[i];
-        f.x += f.speed * dt * 0.045;
-        f.el.style.left = f.x + 'px';
-        // steady height — sprite carries the life
-        f.el.style.top = f.y + 'px';
+        f.x += f.speed * (dt / 1000);
+        place(f.el, f.x, f.y, f.face);
         tickFrame(f.el, dt);
-        if ((f.speed > 0 && f.x > window.innerWidth + 90) || (f.speed < 0 && f.x < -90)) {
+        if ((f.speed > 0 && f.x > window.innerWidth + f.w + 8) || (f.speed < 0 && f.x < -f.w - 8)) {
           f.el.remove();
           flyers.splice(i, 1);
         }
@@ -1094,14 +1093,11 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       for (var j = hoppers.length - 1; j >= 0; j--) {
         var h = hoppers[j];
         h.life += dt;
-        // Stay grounded; hop is in the 4-frame loop itself
-        h.el.style.top = h.y + 'px';
+        // Feet stay planted. The hop lives inside the registered frames.
         tickFrame(h.el, dt);
         if (h.life > h.max) {
           h.el.classList.remove('show');
-          (function(node){
-            setTimeout(function(){ if (node.parentNode) node.remove(); }, 850);
-          })(h.el);
+          (function(node){ setTimeout(function(){ if (node.parentNode) node.remove(); }, 750); })(h.el);
           hoppers.splice(j, 1);
         }
       }
@@ -1109,21 +1105,22 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       if (queen && queen.phase !== 'idle') {
         tickFrame(queen.el, dt);
         queen.t += dt;
-        if (queen.phase === 'enter') {
-          queen.x += queen.dir * dt * 0.03;
-          var arrived = (queen.dir > 0 && queen.x >= queen.targetX) || (queen.dir < 0 && queen.x <= queen.targetX);
-          if (arrived) { queen.phase = 'talk'; queen.t = 0; }
-        } else if (queen.phase === 'talk') {
-          if (queen.t > 3600) queen.phase = 'leave';
-        } else if (queen.phase === 'leave') {
-          queen.x += queen.dir * dt * 0.04;
-          if (queen.x < -180 || queen.x > window.innerWidth + 180) {
+        var speed = 22;
+        if (queen.phase === 'enter' || queen.phase === 'leave') {
+          var goal = queen.phase === 'enter' ? queen.targetX : (queen.dir > 0 ? window.innerWidth + 180 : -180);
+          var dx = goal - queen.x;
+          var step = speed * (dt / 1000);
+          if (Math.abs(dx) <= step) queen.x = goal;
+          else queen.x += Math.sign(dx) * step;
+          if (queen.phase === 'enter' && queen.x === goal) { queen.phase = 'talk'; queen.t = 0; }
+          if (queen.phase === 'leave' && (queen.x < -170 || queen.x > window.innerWidth + 170)) {
             queen.wrap.classList.remove('show');
             queen.phase = 'idle';
           }
+        } else if (queen.phase === 'talk' && queen.t > 3400) {
+          queen.phase = 'leave';
         }
-        queen.wrap.style.left = queen.x + 'px';
-        queen.wrap.style.top = queen.y + 'px';
+        queen.wrap.style.transform = 'translate3d(' + Math.round(queen.x) + 'px,' + Math.round(queen.y) + 'px,0)';
       }
 
       requestAnimationFrame(loop);
