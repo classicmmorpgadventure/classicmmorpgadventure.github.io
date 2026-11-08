@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://classicmmorpgadventure.netlify.app/sitemap.xml
+Sitemap: https://classicmmorpgadventure.github.io/sitemap.xml
