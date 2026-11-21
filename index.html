@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#0c0a12">
 <link rel="canonical" href="https://classicmmorpgadventure.github.io/">
 
-<!-- Icons (the round slime from the game, v0.127) -->
+<!-- Icons (the round slime from the game, v0.160) -->
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/icon-192.png">
@@ -68,6 +68,8 @@
           "acceptedAnswer": { "@type": "Answer", "text": "Not publicly yet. Builds are still changing too often. When there’s something worth handing out, it’ll show up here." } },
         { "@type": "Question", "name": "Why “MMORPG” in the name?",
           "acceptedAnswer": { "@type": "Answer", "text": "It’s about the kind of game it is — classes, town, grinding, goals. It does not mean full MMO servers are coming next week." } },
+        { "@type": "Question", "name": "Do pets make you stronger?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Pets have no stats: they follow you, look cute and pick up your drops. Looks never change power in this game." } },
         { "@type": "Question", "name": "Who’s making this?",
           "acceptedAnswer": { "@type": "Answer", "text": "Solo / small-scale project. This site is the public progress log." } }
       ]
@@ -544,11 +546,20 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 .critter-queen-wrap.show{opacity:1}
 .critter-queen-wrap .critter{position:relative;opacity:1;transition:none}
 .critter-hello{
-  position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);
+  position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%) scale(.4);transform-origin:50% 100%;
   font-family:var(--f-pixel);font-size:15px;letter-spacing:.06em;
   color:#1a1208;background:var(--gold-hi);padding:6px 12px;border-radius:10px;
   white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.35);
+  opacity:0;transition:opacity .35s ease,transform .45s cubic-bezier(.34,1.56,.64,1);
 }
+.critter-hello.on{opacity:1;transform:translateX(-50%) scale(1)}
+.critter-fx{position:absolute;left:0;top:0;pointer-events:none;will-change:transform,opacity}
+.critter-fx.dust{width:7px;height:7px;border-radius:50%;background:rgba(222,204,166,.8)}
+.critter-fx.spore{width:5px;height:5px;border-radius:50%;background:#c3e27f;box-shadow:0 0 6px rgba(195,226,127,.8)}
+.critter-fx.zz{font-family:var(--f-pixel);font-size:14px;color:#e4f4cf;text-shadow:0 1px 0 rgba(0,0,0,.55)}
+.critter-fx.bang{font-family:var(--f-pixel);font-size:18px;font-weight:600;color:#ff6b5b;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.critter-fx.bug{width:4px;height:4px;border-radius:50%;background:#2b2232;box-shadow:0 0 0 1px rgba(255,255,255,.3)}
+.critter-fx.critter-tongue{height:3px;width:0;border-radius:2px;background:#ec6f82;transform-origin:0 50%}
 .critter-hello::after{
   content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;
   background:var(--gold-hi);transform:rotate(45deg);
@@ -599,14 +610,14 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       <a href="#roadmap">Roadmap</a>
       <a href="#faq">FAQ</a>
     </div>
-    <span class="ver-pill">Build v0.127</span>
+    <span class="ver-pill">Build v0.160</span>
   </div>
 </nav>
 
 <section class="hero" id="top">
   <div class="hero-content">
     <div>
-      <div class="badge rise" style="--d:0"><i></i>Godot 4.7 · build v0.127</div>
+      <div class="badge rise" style="--d:0"><i></i>Godot 4.7 · build v0.160</div>
       <h1>
         <span class="line plain rise" style="--d:1">Classic MMORPG</span>
         <span class="line gilt rise" style="--d:2">Adventure</span>
@@ -646,22 +657,23 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
         <h3>In game right now</h3>
         <ul>
           <li>A town and 6 regions, each with its own boss</li>
+          <li>A first dungeon, The Hollow Hive, on Normal and Hard</li>
           <li>Real-time combat, with bosses that get angrier</li>
           <li>Four classes with job changes at levels 10, 30 and 70</li>
-          <li>A hero that walks, blinks and wears what you put on</li>
-          <li>Gathering with tools, crafting, a shop and a world map</li>
-          <li>Quests, a monster book, gathering while you’re away</li>
-          <li>Party play online, now with passwords</li>
+          <li>Gear in 11 slots, with rolled stats and region sets</li>
+          <li>Seven pets that follow you and pick up drops</li>
+          <li>Gathering, crafting, quests, cards and leaderboards</li>
+          <li>Party play online, on a server that keeps everything</li>
         </ul>
       </div>
       <div class="card c-leaf glow corners reveal" style="--i:1">
         <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg></div>
         <h3>Still messy</h3>
         <ul>
-          <li>Many monsters and items have no art yet</li>
+          <li>About half the monsters still need their art</li>
           <li>Only about a hundred quests so far, the story ones are next</li>
           <li>Few sounds, and some areas still look bare</li>
-          <li>Ledges and traps still use stand-in art</li>
+          <li>Only the first region has its new ground and ledges so far</li>
           <li>No public build download yet</li>
         </ul>
       </div>
@@ -677,29 +689,29 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
     <div class="section-head reveal">
       <div class="kicker">Status</div>
       <h2>Where things stand</h2>
-      <p>Build line <strong>v0.127</strong>. The game is online only now: the server keeps everything and your game shows it. Gear with random stats, collections, secrets, jump quests and world events are in. The next big step is the first dungeon.</p>
+      <p>Build line <strong>v0.160</strong>. The first dungeon is in, with a queen to beat on two difficulties. Gear now has eleven slots and region sets, the Hall of Records keeps leaderboards, and seven pets follow you around and pick up your loot. Almost every item has its own detailed picture now. Next up: fishing and cooking.</p>
     </div>
     <div class="status-strip">
-      <div class="stat glow reveal" style="--i:0"><b data-count="0.127" data-dec="3">0.127</b><span>Build</span></div>
+      <div class="stat glow reveal" style="--i:0"><b data-count="0.160" data-dec="3">0.160</b><span>Build</span></div>
       <div class="stat glow reveal" style="--i:1"><b data-count="4.7" data-dec="1">4.7</b><span>Godot</span></div>
       <div class="stat glow reveal" style="--i:2"><b data-count="4" data-dec="0">4</b><span>Classes</span></div>
       <div class="stat ok glow reveal" style="--i:3"><b>Playable</b><span>Main game</span></div>
       <div class="stat wip glow reveal" style="--i:4"><b>WIP</b><span>Polish</span></div>
     </div>
-    <div class="xp reveal" style="--i:2;--pct:12.7%" role="img" aria-label="Progress toward Alpha v1.0: 12.7 percent, build v0.127">
-      <div class="xp-top"><span>EXP to Alpha v1.0</span><b>12.7% · build v0.127 / 1.00</b></div>
+    <div class="xp reveal" style="--i:2;--pct:16.0%" role="img" aria-label="Progress toward Alpha v1.0: 16.0 percent, build v0.160">
+      <div class="xp-top"><span>EXP to Alpha v1.0</span><b>16.0% · build v0.160 / 1.00</b></div>
       <div class="xp-bar"><div class="xp-fill"></div></div>
     </div>
 
-    <div class="xp reveal" style="--i:3" role="img" aria-label="Where each part of the game stands: Core systems 82 percent, Quests 20 percent, Monster art 37 percent, Item art 25 percent, Menus 76 percent, Online play 80 percent">
+    <div class="xp reveal" style="--i:3" role="img" aria-label="Where each part of the game stands: Core systems 88 percent, Quests 20 percent, Monster art 40 percent, Item art 60 percent, Menus 81 percent, Online play 84 percent">
       <div class="xp-top"><span>Where each part stands</span><b>Rough estimates</b></div>
       <div class="xp-segs">
-        <div class="xp-seg" style="--pct:82%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Core systems <b>82%</b></span></div>
+        <div class="xp-seg" style="--pct:88%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Core systems <b>88%</b></span></div>
         <div class="xp-seg" style="--pct:20%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Quests <b>20%</b></span></div>
-        <div class="xp-seg" style="--pct:37%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Monster art <b>37%</b></span></div>
-        <div class="xp-seg" style="--pct:25%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Item art <b>25%</b></span></div>
-        <div class="xp-seg" style="--pct:76%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Menus <b>76%</b></span></div>
-        <div class="xp-seg" style="--pct:80%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Online play <b>80%</b></span></div>
+        <div class="xp-seg" style="--pct:40%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Monster art <b>40%</b></span></div>
+        <div class="xp-seg" style="--pct:60%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Item art <b>60%</b></span></div>
+        <div class="xp-seg" style="--pct:81%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Menus <b>81%</b></span></div>
+        <div class="xp-seg" style="--pct:84%"><div class="xp-bar"><div class="xp-fill"></div></div><span>Online play <b>84%</b></span></div>
       </div>
     </div>
   </section>
@@ -716,66 +728,66 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">Online</div>
+        <div class="when">Pets</div>
         <div>
-          <h3>The game is online only</h3>
+          <h3>Seven pets to find</h3>
           <p>
-            The game now runs entirely on a server: your character, items and progress live there, and the game on your screen just shows them. Accounts are saved in a proper database, you can reconnect after a dropped connection, and there are several channels per map. It was tested with 200 pretend players at once. Next up is putting it on a real server.
+            A cat, a dog, a bunny, a fox, a frog, a turtle and an owl. Each one is a rare drop from a region boss or the new dungeon. Your pet follows you around, you can give it a name, and it picks up drops for you. They breathe, blink now and then, and the owl flies along behind you, then lands next to you when you stop. The little ones running around this page are them.
           </p>
         </div>
       </article>
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">Loot</div>
+        <div class="when">Dungeon</div>
         <div>
-          <h3>Gear worth chasing</h3>
+          <h3>The Hollow Hive</h3>
           <p>
-            Every piece of gear is now its own item with a rarity, from plain to very rare, and its own rolled stats. A rare drop shows a light beam on the ground, and a “perfect roll” is a real prize. The bag now shows how a new item compares with what you wear.
+            The first dungeon is in Honey Woods. Bring a Honeycomb Key, fight through the hive with your party and face Queen Honeywing at the end. Halfway through she calls her guards and stings faster, and on Hard her guards come pouring out even sooner. If you are lucky she drops a honeycomb throne you can sit on, or a crown you can wear.
           </p>
         </div>
       </article>
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">Collecting</div>
+        <div class="when">Gear</div>
         <div>
-          <h3>Cards, a log and achievements</h3>
+          <h3>More slots, and sets</h3>
           <p>
-            Monsters can drop cards, and every zone has a card page to fill. A collection log keeps track of everything you have found, and achievements give you titles to wear above your name. Some of them unlock chairs you can sit on.
+            Gear now goes in eleven slots, with gloves, a cape, earrings, a ring, a pendant and a shield joining the old ones. Each region has its own set, and wearing two, three or four pieces of it gives you a bonus. You can also wear a look over your gear: it changes how you appear, never your stats.
           </p>
         </div>
       </article>
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">Secrets</div>
+        <div class="when">Records</div>
         <div>
-          <h3>Jump quests and hidden places</h3>
+          <h3>The Hall of Records</h3>
           <p>
-            Two climbing courses test your jumps, and each region now hides a secret place with its own little scene and a treasure chest you can open once a day. Finding them is part of the fun, so there are no signs.
+            A new sign in Treehouse Village opens the leaderboards: highest level, most achievements, biggest collection, most party quests, and the fastest dungeon and jump quest times. Some boards start fresh every week, so there is always a new race to win.
           </p>
         </div>
       </article>
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">World</div>
+        <div class="when">Art</div>
         <div>
-          <h3>Things happen in the world</h3>
+          <h3>A big art pass</h3>
           <p>
-            Every so often a banner tells the whole channel that something is coming: a Slime Surge that rushes at you in waves, or a Golden Visitor that runs away and rains loot when caught. Everyone who helps gets a share, based on how much they did.
+            Almost every item in the game now has its own detailed picture (the newest gear is next), and coins have art too: Bronze, Silver, Gold and Starsteel. There are eighteen silly chairs to sit on, from a rubber duck to a honeycomb throne, many of them moving. Monster cards got frames and little scenes, and Leaf Meadow got new ground, ledges, ropes, ladders, portals and decorations.
           </p>
         </div>
       </article>
 
       <article class="entry glow reveal">
         <span class="node" aria-hidden="true"></span>
-        <div class="when">Players</div>
+        <div class="when">Fixes</div>
         <div>
-          <h3>Parties, names and tidier characters</h3>
+          <h3>Smoother behind the scenes</h3>
           <p>
-            Parties can go through a Fissure to a party quest, with a list for finding groups. Every character now has its own unique name that you choose, shown under them, and your sign-in name is never shown to other players. Other players now move and animate just like you do, and your character picture shows your current look everywhere.
+            Enemies that seemed to turn invisible now show up where they really are, and a lot of small bugs found while playing the dungeon are gone. The server got easier to run and test, with a developer rank that helps me try things out quickly.
           </p>
         </div>
       </article>
@@ -793,19 +805,19 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
       <div class="rm-col now glow reveal" style="--i:0">
         <header>Working on <small>NOW</small></header>
         <ul>
-          <li>The first dungeon, with rare loot and a boss</li>
-          <li>Leaderboards, pets and more things to collect</li>
           <li>Fishing and cooking, in a light way</li>
-          <li>Checking the pace from level 1 to 50</li>
+          <li>Rare unique gear and upgrade shards</li>
+          <li>Checking the pace and prices from level 1 to 50</li>
+          <li>New ground and decorations for more regions</li>
         </ul>
       </div>
       <div class="rm-col next glow reveal" style="--i:1">
         <header>After that <small>NEXT</small></header>
         <ul>
           <li>A big boss that appears at set times</li>
-          <li>More party quests and harder dungeon levels</li>
+          <li>More party quests and a second dungeon</li>
           <li>A story with lots of quests in every region</li>
-          <li>Gear upgrades with a bit of risk</li>
+          <li>Art for the rest of the monsters</li>
         </ul>
       </div>
       <div class="rm-col later glow reveal" style="--i:2">
@@ -840,6 +852,10 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
         <p>It’s about the kind of game it is — classes, town, grinding, goals. It does not mean full MMO servers are coming next week.</p>
       </details>
       <details class="glow reveal" style="--i:3">
+        <summary>Do pets make you stronger?</summary>
+        <p>No. Pets have no stats: they follow you, look cute and pick up your drops. Looks never change power in this game.</p>
+      </details>
+      <details class="glow reveal" style="--i:4">
         <summary>Who’s making this?</summary>
         <p>Solo / small-scale project. This site is the public progress log.</p>
       </details>
@@ -851,7 +867,7 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 <footer>
   <div class="wrap">
     <div class="ornament"><img class="pixel" src="images/icon-48.png" width="34" height="34" alt=""></div>
-    <div>Classic MMORPG Adventure · devlog · v0.127 · Godot 4.7<br>Independent project.</div>
+    <div>Classic MMORPG Adventure · devlog · v0.160 · Godot 4.7<br>Independent project.</div>
     <a class="to-top" href="#top">↑ Back to top</a>
   </div>
 </footer>
@@ -958,191 +974,546 @@ footer .fine{font-family:var(--f-pixel);letter-spacing:.08em;font-size:13px}
 
 
 
-  // Ambient critters — registered sheets, frames 1-4 only
+  // Ambient critters — every one has its own way of moving, and the pets from the game come out to play
   (function(){
     if (reduce) return;
     var root = document.getElementById('critters');
     if (!root) return;
     var BASE = 'images/critters/';
-    // Display size matches the pre-aligned sheet cell. fps is the loop rate.
+    // Monster sheets: 4-frame loops (the frames already flap or squish).
+    // Pet sheets are the game's own strips: standing 0-2, the same with eyes shut 3-5, moving 6-11.
     var META = {
-      bumblekin: {w:56, h:56, fps:5},
-      angry1:    {w:51, h:56, fps:5},
-      angry2:    {w:57, h:56, fps:5},
-      queen:     {w:160, h:148, fps:4},
-      slime:     {w:64, h:44, fps:4},
-      moss:      {w:56, h:48, fps:4},
-      rotten:    {w:56, h:52, fps:4}
+      bumblekin: {w:56, h:56, n:4, fps:5},
+      angry1:    {w:51, h:56, n:4, fps:6},
+      angry2:    {w:57, h:56, n:4, fps:8},
+      queen:     {w:160, h:148, n:4, fps:4},
+      slime:     {w:64, h:44, n:4, fps:4},
+      moss:      {w:56, h:48, n:4, fps:3},
+      rotten:    {w:56, h:52, n:4, fps:4},
+      cat:    {w:76, h:65, n:12, sheet:'pet_cat.png'},
+      dog:    {w:76, h:56, n:12, sheet:'pet_dog.png'},
+      bunny:  {w:66, h:64, n:12, sheet:'pet_bunny.png'},
+      fox:    {w:90, h:66, n:12, sheet:'pet_fox.png'},
+      frog:   {w:54, h:43, n:12, sheet:'pet_frog.png'},
+      turtle: {w:72, h:39, n:12, sheet:'pet_turtle.png'},
+      owl:    {w:64, h:59, n:12, sheet:'pet_owl.png'}
     };
-    var flyers = [];
-    var hoppers = [];
-    var queen = null;
-    var nextFlyer = 4500;
-    var nextHopper = 9000;
-    var nextQueen = 26000 + Math.random()*18000;
+    var PETS = ['cat', 'dog', 'bunny', 'fox', 'frog', 'turtle', 'owl'];
+    var actors = [];
+    var W = window.innerWidth, H = window.innerHeight;
+    window.addEventListener('resize', function(){ W = window.innerWidth; H = window.innerHeight; });
 
-    function paint(el, kind){
+    function rnd(a, b){ return a + Math.random() * (b - a); }
+    function easeInOut(t){ return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+    function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+    function easeIn(t){ return t * t * t; }
+    function ground(m){ return H - m.h - 14; }
+    function side(){ return Math.random() < .5 ? 1 : -1; }
+
+    function sprite(kind, onGround){
       var m = META[kind];
-      el.dataset.kind = kind;
-      el.dataset.frame = '0';
-      el.dataset.fps = String(m.fps);
-      el.dataset.acc = '0';
+      var el = document.createElement('div');
+      el.className = 'critter' + (onGround ? ' ground' : '');
       el.style.width = m.w + 'px';
       el.style.height = m.h + 'px';
-      el.style.backgroundImage = 'url("' + BASE + kind + '_sheet.png")';
-      el.style.backgroundSize = (m.w * 4) + 'px ' + m.h + 'px';
-      el.style.backgroundPosition = '0 0';
-    }
-
-    function tickFrame(el, dt){
-      var m = META[el.dataset.kind];
-      if (!m) return;
-      var acc = (+el.dataset.acc || 0) + dt;
-      var step = 1000 / m.fps;
-      if (acc < step) { el.dataset.acc = String(acc); return; }
-      acc -= step;
-      if (acc > step) acc = acc % step;
-      var frame = ((+el.dataset.frame || 0) + 1) % 4;
-      el.dataset.frame = String(frame);
-      el.dataset.acc = String(acc);
-      el.style.backgroundPosition = (-frame * m.w) + 'px 0px';
-    }
-
-    function place(el, x, y, face){
-      var sx = face < 0 ? -1 : 1;
-      el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) scaleX(' + sx + ')';
-    }
-
-    function spawnFlyer(){
-      var pool = ['bumblekin','bumblekin','bumblekin','angry1','angry2'];
-      var kind = pool[(Math.random()*pool.length)|0];
-      var m = META[kind];
-      var el = document.createElement('div');
-      el.className = 'critter';
-      paint(el, kind);
-      var fromLeft = Math.random() < 0.5;
-      var y = 64 + Math.random() * Math.min(240, window.innerHeight * 0.36);
-      var x = fromLeft ? -m.w - 12 : window.innerWidth + 12;
-      var face = fromLeft ? 1 : -1;
-      var speed = (26 + Math.random()*14) * face; // px / sec, no bob
-      place(el, x, y, face);
+      el.style.backgroundImage = 'url("' + BASE + (m.sheet || kind + '_sheet.png') + '")';
+      el.style.backgroundSize = (m.w * m.n) + 'px ' + m.h + 'px';
       root.appendChild(el);
       requestAnimationFrame(function(){ el.classList.add('show'); });
-      flyers.push({el:el, x:x, y:y, speed:speed, face:face, w:m.w});
+      return {kind:kind, m:m, el:el, x:0, y:0, lift:0, face:1, rot:0, sx:1, sy:1, frame:-1, acc:0, t:0, at:0,
+        blinkWait:rnd(1200, 3200), blinkHold:0, dead:false, grounded:!!onGround};
+    }
+    function setFrame(a, f){
+      if (f === a.frame) return;
+      a.frame = f;
+      a.el.style.backgroundPosition = (-f * a.m.w) + 'px 0px';
+    }
+    function loop4(a, dt, fps){
+      a.acc += dt;
+      var step = 1000 / (fps || a.m.fps);
+      if (a.frame < 0 || a.acc >= step) { a.acc %= step; setFrame(a, (a.frame + 1) % a.m.n); }
+    }
+    function put(a){
+      if (a.grounded) a.y = ground(a.m);               // the floor follows the window when it is resized
+      a.el.style.transform = 'translate3d(' + Math.round(a.x) + 'px,' + Math.round(a.y - a.lift) + 'px,0) rotate(' +
+        a.rot.toFixed(1) + 'deg) scale(' + (a.sx * a.face).toFixed(3) + ',' + a.sy.toFixed(3) + ')';
+    }
+    function offscreen(a, d){ return d > 0 ? a.x > W + a.m.w + 12 : a.x < -a.m.w - 12; }
+    function remove(a){ if (a.el.parentNode) a.el.remove(); a.dead = true; }
+    function fadeOut(a){
+      a.el.classList.remove('show');
+      setTimeout(function(){ if (a.el.parentNode) a.el.remove(); }, 800);
+      a.dead = true;
     }
 
-    function spawnHopper(){
-      var pool = ['slime','moss','rotten'];
-      var kind = pool[(Math.random()*pool.length)|0];
-      var m = META[kind];
+    // ---- little effects: dust, spores, sleepy z's, a "!" ----
+    function fx(cls, x, y, o){
       var el = document.createElement('div');
-      el.className = 'critter ground';
-      paint(el, kind);
-      var x = 36 + Math.random() * Math.max(40, window.innerWidth - m.w - 72);
-      var y = window.innerHeight - m.h - 18;
-      place(el, x, y, 1);
+      el.className = 'critter-fx ' + cls;
+      if (o.text) el.textContent = o.text;
       root.appendChild(el);
-      requestAnimationFrame(function(){ el.classList.add('show'); });
-      hoppers.push({el:el, x:x, y:y, life:0, max:7200 + Math.random()*2800});
+      actors.push({el:el, t:0, max:o.ms || 800, x:x, y:y, vx:o.vx || 0, vy:o.vy || -20, s0:o.s0 || 1, s1:o.s1 || 1,
+        update:function(dt){
+          this.t += dt;
+          var u = Math.min(1, this.t / this.max);
+          this.x += this.vx * dt / 1000;
+          this.y += this.vy * dt / 1000;
+          var s = this.s0 + (this.s1 - this.s0) * u;
+          this.el.style.transform = 'translate3d(' + this.x.toFixed(1) + 'px,' + this.y.toFixed(1) + 'px,0) scale(' + s.toFixed(2) + ')';
+          this.el.style.opacity = String(u < .2 ? u / .2 : 1 - (u - .2) / .8);
+          if (u >= 1) { this.el.remove(); return false; }
+          return true;
+        }});
+    }
+    function dust(x, y, n){
+      for (var i = 0; i < (n || 3); i++) fx('dust', x + rnd(-8, 8), y - rnd(2, 6), {vx:rnd(-28, 28), vy:rnd(-24, -8), s0:.6, s1:1.5, ms:rnd(420, 700)});
+    }
+    function feet(a){ return {x:a.x + a.m.w / 2, y:a.y + a.m.h}; }
+
+    // ---- bees ----
+    function bumblekin(){
+      var a = sprite('bumblekin', false), d = side();
+      a.face = d;
+      a.x = d > 0 ? -a.m.w - 10 : W + 10;
+      var y0 = rnd(70, 70 + Math.min(220, H * .34)), v = rnd(34, 46), ph = rnd(0, 6.28);
+      var trick = Math.random() < .55 ? 'loop' : 'look', trickX = W * rnd(.3, .62);
+      var state = 'fly', st = 0, lx = 0, ly = 0;
+      a.y = y0;
+      a.update = function(dt){
+        a.t += dt;
+        loop4(a, dt);
+        var w = a.t / 1000 * 2.6 + ph;
+        if (state === 'fly') {
+          a.x += d * v * dt / 1000;
+          a.y = y0 + Math.sin(w) * 13;
+          a.rot = d * Math.cos(w) * 7;
+          if (trick && (d > 0 ? a.x > trickX : a.x < trickX)) { state = trick; trick = null; st = 0; lx = a.x; ly = a.y; }
+        } else if (state === 'loop') {                 // a loop-the-loop
+          st += dt;
+          var u = Math.min(1, st / 1500), th = u * Math.PI * 2, R = 26;
+          a.x = lx + d * (u * 50 + R * Math.sin(th));
+          a.y = ly - R * (1 - Math.cos(th));
+          a.rot = -d * th * 180 / Math.PI;
+          if (u >= 1) { state = 'fly'; a.rot = 0; y0 = a.y - Math.sin(w) * 13; }
+        } else {                                       // stops, looks back over its shoulder, buzzes on
+          st += dt;
+          a.y = ly + Math.sin(st / 1000 * 9) * 3;
+          a.rot = 0;
+          a.face = (st > 450 && st < 1100) ? -d : d;
+          if (st > 1600) { state = 'fly'; a.face = d; y0 = a.y - Math.sin(w) * 13; }
+        }
+        put(a);
+        if (offscreen(a, d)) { remove(a); return false; }
+        return true;
+      };
+      actors.push(a);
     }
 
+    function angryBee(kind){
+      var a = sprite(kind, false), d = side();
+      a.face = d;
+      a.x = d > 0 ? -a.m.w - 10 : W + 10;
+      var lane = rnd(80, 80 + Math.min(200, H * .3));
+      a.y = lane;
+      var state = 'hold', st = 0, hold = 200, fx0 = a.x, fy0 = a.y, tx = a.x, ty = a.y, dashes = 0, huff = false;
+      a.update = function(dt){
+        a.t += dt;
+        loop4(a, dt);
+        st += dt;
+        if (state === 'dash') {                       // darts forward and leans into it
+          var u = Math.min(1, st / 340), e = easeOut(u);
+          a.x = fx0 + (tx - fx0) * e;
+          a.y = fy0 + (ty - fy0) * e;
+          a.rot = d * 12 * (1 - u);
+          if (u >= 1) {
+            state = 'hold'; st = 0; dashes++;
+            huff = kind === 'angry2' && dashes % 3 === 0;
+            hold = huff ? 1100 : rnd(420, 850);
+            if (huff) fx('bang', a.x + a.m.w * .5 - 4, a.y - 10, {vy:-14, ms:900, s0:.6, s1:1.2, text:'!'});
+          }
+        } else {                                       // hovers in place, buzzing angrily (angry2 puffs up)
+          var p = huff ? Math.sin(Math.min(1, st / hold) * Math.PI) * .18 : 0;
+          a.sx = a.sy = 1 + p;
+          a.rot = Math.sin(a.t / 28) * (huff ? 8 : 2.5);
+          a.y = ty + Math.sin(a.t / 40) * 1.5;
+          if (st > hold) {
+            state = 'dash'; st = 0; a.sx = a.sy = 1;
+            fx0 = a.x; fy0 = a.y;
+            tx = a.x + d * rnd(70, 125);
+            ty = Math.max(60, Math.min(lane + 70, lane + rnd(-45, 45)));
+          }
+        }
+        put(a);
+        if (offscreen(a, d)) { remove(a); return false; }
+        return true;
+      };
+      actors.push(a);
+    }
+
+    // ---- slimes on the ground ----
+    function slime(){                                  // bounces across with squash and stretch, sometimes a big twirl
+      var a = sprite('slime', true), d = side();
+      a.face = d;
+      a.x = d > 0 ? -a.m.w : W;
+      a.y = ground(a.m);
+      var hop = null, rest = 300;
+      function next(){
+        var big = Math.random() < .2;
+        hop = {t:0, ms:big ? 950 : 640, h:big ? rnd(48, 62) : rnd(16, 28), dx:d * (big ? rnd(70, 90) : rnd(40, 60)), x0:a.x, big:big, landed:false};
+      }
+      a.update = function(dt){
+        a.t += dt;
+        loop4(a, dt);
+        if (hop) {
+          hop.t += dt;
+          var crouch = 140, land = 150, air = hop.ms - crouch - land;
+          if (hop.t < crouch) {
+            var c = hop.t / crouch;
+            a.sy = 1 - .2 * c; a.sx = 1 + .16 * c; a.lift = 0;
+          } else if (hop.t < crouch + air) {
+            var u = (hop.t - crouch) / air;
+            a.x = hop.x0 + hop.dx * u;
+            a.lift = hop.h * 4 * u * (1 - u);
+            a.sy = 1.14 - .14 * u; a.sx = .9 + .1 * u;
+            if (hop.big) a.sx *= Math.cos(u * Math.PI * 2);         // a twirl in the air
+          } else {
+            var l = Math.min(1, (hop.t - crouch - air) / land);
+            a.lift = 0; a.sy = .76 + .24 * l; a.sx = 1.24 - .24 * l;
+            if (!hop.landed) { hop.landed = true; if (hop.big) dust(feet(a).x, feet(a).y, 4); }
+          }
+          if (hop.t >= hop.ms) { a.sx = a.sy = 1; hop = null; rest = Math.random() < .25 ? rnd(700, 1500) : rnd(60, 220); }
+        } else {
+          rest -= dt;
+          a.sy = 1 + Math.sin(a.t / 90) * .04; a.sx = 1 - Math.sin(a.t / 90) * .04;   // a happy jiggle
+          if (rest <= 0) next();
+        }
+        put(a);
+        if (offscreen(a, d)) { remove(a); return false; }
+        return true;
+      };
+      actors.push(a);
+      return a;
+    }
+
+    function moss(){                                   // scoots like an inchworm, then naps with little z's
+      var a = sprite('moss', true), d = side();
+      a.face = d;
+      a.x = 40 + Math.random() * Math.max(40, W - a.m.w - 80);
+      a.y = ground(a.m);
+      var phase = 'scoot', st = 0, scoots = 0, plan = (2 + Math.random() * 2) | 0, napped = false, zt = 0, life = 0;
+      a.update = function(dt){
+        a.t += dt; life += dt;
+        loop4(a, dt);
+        st += dt;
+        if (phase === 'scoot') {
+          var u = Math.min(1, st / 900);
+          if (u < .5) { var s = Math.sin(u * 2 * Math.PI); a.sx = 1 + .14 * s; a.sy = 1 - .1 * s; a.x += d * 34 * dt / 1000; }
+          else { var s2 = Math.sin((u - .5) * 2 * Math.PI); a.sx = 1 - .08 * s2; a.sy = 1 + .08 * s2; }
+          if (u >= 1) {
+            st = 0; scoots++;
+            if (scoots >= plan) { scoots = 0; if (!napped) { phase = 'nap'; napped = true; } else phase = 'bye'; }
+          }
+        } else if (phase === 'nap') {
+          a.sy = 1 + Math.sin(st / 400) * .035; a.sx = 1 - Math.sin(st / 400) * .03;
+          zt -= dt;
+          if (zt <= 0) { zt = 750; fx('zz', a.x + a.m.w * (d > 0 ? .7 : .3), a.y + 4, {vx:d * 10, vy:-18, ms:1500, s0:.7, s1:1.3, text:'z'}); }
+          if (st > 3600) { phase = 'scoot'; st = 0; plan = 2; }
+        } else { fadeOut(a); return false; }
+        put(a);
+        return true;
+      };
+      actors.push(a);
+      return a;
+    }
+
+    function rotten(){                                 // waddles, stops, shakes out a puff of spores, waddles on
+      var a = sprite('rotten', true), d = side();
+      a.face = d;
+      a.x = 40 + Math.random() * Math.max(40, W - a.m.w - 80);
+      a.y = ground(a.m);
+      var phase = 'waddle', st = 0, steps = 0, shook = 0;
+      a.update = function(dt){
+        a.t += dt;
+        loop4(a, dt);
+        st += dt;
+        if (phase === 'waddle') {
+          var u = st / 380;
+          a.rot = Math.sin(u * Math.PI) * 7 * (steps % 2 ? 1 : -1);
+          a.lift = Math.sin(u * Math.PI) * 2;
+          a.x += d * 22 * dt / 1000;
+          if (u >= 1) {
+            st = 0; steps++; a.rot = 0; a.lift = 0;
+            if (steps % 5 === 0) phase = shook < 2 ? 'shake' : 'bye';
+          }
+        } else if (phase === 'shake') {
+          a.rot = Math.sin(st / 35) * 6 * (1 - st / 700);
+          if (st > 220 && !a.puffed) {
+            a.puffed = true;
+            for (var i = 0; i < 6; i++) fx('spore', a.x + a.m.w * rnd(.2, .8), a.y + 6, {vx:rnd(-22, 22), vy:rnd(-40, -22), ms:rnd(900, 1400), s0:.8, s1:1.4});
+          }
+          if (st > 700) { phase = 'waddle'; st = 0; a.rot = 0; a.puffed = false; shook++; if (Math.random() < .4) { d = -d; a.face = d; } }
+        } else { fadeOut(a); return false; }
+        put(a);
+        return true;
+      };
+      actors.push(a);
+      return a;
+    }
+
+    // ---- the Queen: flies in, stops, says hello, the bubble goes away, then she flies on ----
+    var queen = null;
     function ensureQueen(){
       if (queen) return;
       var wrap = document.createElement('div');
       wrap.className = 'critter-queen-wrap';
       var hello = document.createElement('div');
       hello.className = 'critter-hello';
-      hello.textContent = 'Hello';
+      hello.textContent = 'Hello!';
       var el = document.createElement('div');
       el.className = 'critter';
-      paint(el, 'queen');
+      var m = META.queen;
+      el.style.width = m.w + 'px';
+      el.style.height = m.h + 'px';
+      el.style.backgroundImage = 'url("' + BASE + 'queen_sheet.png")';
+      el.style.backgroundSize = (m.w * m.n) + 'px ' + m.h + 'px';
       wrap.appendChild(hello);
       wrap.appendChild(el);
       root.appendChild(wrap);
-      queen = {wrap:wrap, el:el, x:0, y:0, phase:'idle', t:0, dir:1, targetX:0, face:1};
+      queen = {wrap:wrap, el:el, hello:hello, m:m, kind:'queen', frame:-1, acc:0, x:0, y:0, y0:0, phase:'idle', t:0, dir:1, x0:0, x1:0};
     }
-
     function showQueen(){
       ensureQueen();
-      var m = META.queen;
-      var fromLeft = Math.random() < 0.5;
-      queen.x = fromLeft ? -m.w - 20 : window.innerWidth + 20;
-      queen.y = 72 + Math.random() * Math.min(160, window.innerHeight * 0.22);
-      queen.targetX = fromLeft ? (48 + Math.random()*80) : (window.innerWidth - m.w - 48 - Math.random()*60);
-      queen.dir = fromLeft ? 1 : -1;
-      queen.face = queen.dir;
-      queen.phase = 'enter';
-      queen.t = 0;
-      queen.el.style.transform = 'scaleX(' + queen.face + ')';
-      queen.wrap.style.transform = 'translate3d(' + Math.round(queen.x) + 'px,' + Math.round(queen.y) + 'px,0)';
-      queen.wrap.classList.add('show');
+      var q = queen, m = q.m;
+      q.dir = side();
+      q.x0 = q.dir > 0 ? -m.w - 20 : W + 20;
+      q.x1 = q.dir > 0 ? rnd(60, 140) : W - m.w - rnd(60, 140);
+      q.x = q.x0;
+      q.y0 = rnd(72, 72 + Math.min(150, H * .2));
+      q.phase = 'enter';
+      q.t = 0;
+      q.el.style.transform = 'scaleX(' + q.dir + ')';
+      q.hello.classList.remove('on');
+      q.wrap.classList.add('show');
+    }
+    function tickQueen(dt){
+      var q = queen;
+      if (!q || q.phase === 'idle') return;
+      loop4(q, dt);
+      q.t += dt;
+      var tilt = 0;
+      if (q.phase === 'enter') {                       // glides in and slows to a stop
+        var u = Math.min(1, q.t / 3600);
+        q.x = q.x0 + (q.x1 - q.x0) * easeOut(u);
+        tilt = 4 * (1 - u);
+        if (u >= 1) { q.phase = 'pause'; q.t = 0; }
+      } else if (q.phase === 'pause') {                // a brief second, hovering
+        if (q.t > 1000) { q.phase = 'hello'; q.t = 0; q.hello.classList.add('on'); }
+      } else if (q.phase === 'hello') {                // says hello for a few seconds
+        if (q.t > 3200) { q.phase = 'bye'; q.t = 0; q.hello.classList.remove('on'); }
+      } else if (q.phase === 'bye') {                  // the bubble fades, then she goes on her way
+        if (q.t > 700) { q.phase = 'leave'; q.t = 0; q.x0 = q.x; }
+      } else if (q.phase === 'leave') {
+        var gone = q.dir > 0 ? W + 40 : -q.m.w - 40, v = Math.min(1, q.t / 5200);
+        q.x = q.x0 + (gone - q.x0) * easeIn(v);
+        tilt = 5 * Math.min(1, q.t / 1200);
+        if (v >= 1) { q.wrap.classList.remove('show'); q.phase = 'idle'; }
+      }
+      var y = q.y0 + Math.sin(performance.now() / 1000 * 2.1) * 5;
+      q.wrap.style.transform = 'translate3d(' + Math.round(q.x) + 'px,' + Math.round(y) + 'px,0) rotate(' + (q.dir * tilt).toFixed(1) + 'deg)';
+    }
+
+    // ---- pets: each one has a little act ----
+    function stand(a, dt, fps){                        // breathing, and a blink now and then
+      a.at += dt / 1000;
+      var f = [0, 1, 2, 1][Math.floor(a.at * (fps || 2)) % 4];
+      a.blinkWait -= dt;
+      if (a.blinkWait <= 0) { a.blinkHold = 140; a.blinkWait = rnd(2600, 6000); }
+      if (a.blinkHold > 0) { a.blinkHold -= dt; f += 3; }
+      setFrame(a, f);
+    }
+    function moving(a, dt, fps){ a.at += dt / 1000; setFrame(a, 6 + Math.floor(a.at * fps) % 6); }
+
+    function walkTo(a, x, speed, fps, trail){
+      var acc = 0;
+      return {tick:function(dt){
+        moving(a, dt, fps);
+        var step = speed * dt / 1000, dx = x - a.x;
+        if (trail) { acc += dt; if (acc > 70) { acc = 0; dust(feet(a).x - a.face * a.m.w * .35, feet(a).y, 1); } }
+        if (Math.abs(dx) <= step) { a.x = x; return true; }
+        a.face = dx > 0 ? 1 : -1;
+        a.x += (dx > 0 ? 1 : -1) * step;
+        return false;
+      }};
+    }
+    function wait(a, ms, fps){ return {tick:function(dt){ stand(a, dt, fps); return this.t >= ms; }}; }
+    function turn(a){ return {tick:function(){ a.face = -a.face; return true; }}; }
+    function hopTo(a, x, dist, h, ms){                 // one hop per cycle of the hop frames, in the air in the middle
+      var dir = 0, ht = 0;
+      return {start:function(){ dir = x > a.x ? 1 : -1; a.face = dir; ht = 0; }, tick:function(dt){
+        ht += dt;
+        if (ht >= ms) ht -= ms;
+        var u = ht / ms, air = (u - .22) / .6;
+        setFrame(a, 6 + Math.min(5, Math.floor(u * 6)));
+        if (air > 0 && air < 1) {
+          a.lift = h * 4 * air * (1 - air);
+          a.x += dir * dist / (ms * .6) * dt;
+        } else {
+          a.lift = 0;
+          if (dir * (x - a.x) <= dist * .5) { setFrame(a, 0); return true; }
+        }
+        return false;
+      }};
+    }
+    function leap(a, dx, h, ms, f, rot, onLand){       // one jump: a pounce, a binky
+      var x0 = 0;
+      return {start:function(){ x0 = a.x; }, tick:function(dt){
+        var u = Math.min(1, this.t / ms);
+        a.x = x0 + dx * u;
+        a.lift = h * 4 * u * (1 - u);
+        a.rot = rot ? rot(u) : 0;
+        setFrame(a, f);
+        if (u >= 1) { a.lift = 0; a.rot = 0; if (onLand) onLand(); return true; }
+        return false;
+      }};
+    }
+    function wiggle(a, ms){                            // gets low and wiggles before a pounce
+      return {tick:function(dt){
+        stand(a, dt, 3);
+        a.sy = .9; a.sx = 1.06;
+        a.rot = Math.sin(this.t / 55) * 2.5;
+        if (this.t >= ms) { a.sy = a.sx = 1; a.rot = 0; return true; }
+        return false;
+      }};
+    }
+    function tailChase(a, ms){                         // the dog spins round after its tail
+      var f0 = 1, x0 = 0;
+      return {start:function(){ f0 = a.face; x0 = a.x; }, tick:function(dt){
+        moving(a, dt, 18);
+        var k = this.t / 170;
+        a.face = Math.floor(k) % 2 ? -f0 : f0;
+        a.x = x0 + Math.sin(k * Math.PI) * 12;
+        a.lift = Math.abs(Math.sin(k * Math.PI)) * 5;
+        if (this.t >= ms) { a.face = f0; a.x = x0; a.lift = 0; return true; }
+        return false;
+      }};
+    }
+    function catchBug(a){                              // a little bug buzzes by, and the frog's tongue snaps it up
+      var bug = null, tongue = null;
+      return {start:function(){
+        bug = document.createElement('div'); bug.className = 'critter-fx bug'; root.appendChild(bug);
+        tongue = document.createElement('div'); tongue.className = 'critter-fx critter-tongue'; root.appendChild(tongue);
+      }, tick:function(dt){
+        stand(a, dt, 3);
+        var mx = a.x + (a.face > 0 ? a.m.w * .84 : a.m.w * .16), my = a.y - a.lift + a.m.h * .56;
+        var reach = 30, t = this.t;
+        var bx = mx + a.face * (reach + Math.cos(t / 90) * 8), by = my - 14 + Math.sin(t / 70) * 6;
+        if (t < 1300) {
+          bug.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0)';
+          tongue.style.width = '0px';
+        } else {
+          var u = Math.min(1, (t - 1300) / 300), len = reach * Math.sin(u * Math.PI);
+          var ang = Math.atan2(by - my, (bx - mx) * a.face) * 180 / Math.PI;
+          tongue.style.width = len.toFixed(1) + 'px';
+          tongue.style.transform = 'translate3d(' + mx.toFixed(1) + 'px,' + my.toFixed(1) + 'px,0) scaleX(' + a.face + ') rotate(' + ang.toFixed(1) + 'deg)';
+          if (u > .5 && bug.parentNode) bug.remove();
+          if (u >= 1) { tongue.remove(); a.sy = 1.08; return true; }
+        }
+        return false;
+      }};
+    }
+    function gulp(a){ return {tick:function(dt){ stand(a, dt, 3); a.sy = 1 + .08 * (1 - Math.min(1, this.t / 400)); return this.t >= 400; }}; }
+    function exclaim(a){ return {tick:function(dt){ stand(a, dt); if (!this.done) { this.done = true; fx('bang', a.x + a.m.w * .5 - 4, a.y - 18, {vy:-16, ms:900, s0:.6, s1:1.2, text:'!'}); } return this.t >= 700; }}; }
+    function settle(a){ return {tick:function(dt){ stand(a, dt); var u = Math.min(1, this.t / 260); a.sy = .86 + .14 * u; a.sx = 1.1 - .1 * u; return u >= 1; }}; }
+    function tilt(a, ms){ return {tick:function(dt){ stand(a, dt); a.rot = Math.sin(this.t / ms * Math.PI * 2) * 7; if (this.t >= ms) { a.rot = 0; return true; } return false; }}; }
+    function flyTo(a, x, lift, ms, swoop){             // the owl: wing beats all the way, a soft landing
+      var x0 = 0, l0 = 0;
+      return {start:function(){ x0 = a.x; l0 = a.lift; a.face = x > x0 ? 1 : -1; }, tick:function(dt){
+        moving(a, dt, 12);
+        var u = Math.min(1, this.t / ms);
+        a.x = x0 + (x - x0) * easeInOut(u);
+        a.lift = l0 + (lift - l0) * (swoop ? easeOut(u) : easeIn(u));
+        a.rot = swoop ? a.face * 14 * (1 - u) : -a.face * 10 * Math.min(1, u * 3);
+        if (u >= 1) { a.rot = 0; return true; }
+        return false;
+      }};
+    }
+
+    var ACTS = {
+      cat: function(a, d, mid, exit){ return [walkTo(a, mid, 56, 13), wait(a, 1800), wiggle(a, 700),
+        leap(a, d * 60, 26, 520, 6, null, function(){ dust(feet(a).x, feet(a).y, 3); }), wait(a, 900),
+        turn(a), wait(a, 600), turn(a), walkTo(a, exit, 62, 14)]; },
+      dog: function(a, d, mid, exit){ return [walkTo(a, mid, 92, 16), wait(a, 900, 3), tailChase(a, 1200), wait(a, 800, 3),
+        walkTo(a, exit, 115, 18)]; },
+      bunny: function(a, d, mid, exit){ return [hopTo(a, mid, 30, 16, 520), wait(a, 1600),
+        leap(a, 0, 36, 620, 9, function(u){ return Math.sin(u * Math.PI * 2) * 20; }), wait(a, 900), hopTo(a, exit, 32, 16, 520)]; },
+      fox: function(a, d, mid, exit){ return [walkTo(a, mid, 66, 13), wait(a, 900), wiggle(a, 800),
+        leap(a, d * 44, 64, 820, 8, function(u){ return d * (-28 + 72 * u); }, function(){ dust(feet(a).x, feet(a).y, 5); }),
+        wait(a, 1100), walkTo(a, exit, 72, 14)]; },
+      frog: function(a, d, mid, exit){ return [hopTo(a, mid, 38, 24, 560), wait(a, 1100, 3), catchBug(a), gulp(a), wait(a, 900, 3),
+        hopTo(a, exit, 40, 26, 560)]; },
+      turtle: function(a, d, mid, exit){ var near = d > 0 ? W * rnd(.1, .18) : W * rnd(.82, .9) - a.m.w;
+        return [walkTo(a, near, 22, 8), wait(a, 2600, 1.5), exclaim(a),
+        walkTo(a, exit, 330, 26, true)]; },
+      owl: function(a, d, mid, exit){ return [flyTo(a, mid, 0, 2300, true), settle(a), wait(a, 1300), tilt(a, 1400), wait(a, 700),
+        flyTo(a, exit, H * .55, 2600, false)]; }
+    };
+    var petBag = [];
+    function pet(){
+      if (!petBag.length) { petBag = PETS.slice(); petBag.sort(function(){ return Math.random() - .5; }); }
+      var kind = petBag.pop();
+      var a = sprite(kind, true), m = a.m, d = side();
+      a.face = d;
+      a.x = d > 0 ? -m.w - 10 : W + 10;
+      a.y = ground(m);
+      if (kind === 'owl') a.lift = rnd(200, Math.min(320, H * .5));
+      var mid = d > 0 ? W * rnd(.24, .42) : W * rnd(.58, .76) - m.w;
+      var exit = d > 0 ? W + m.w + 20 : -m.w - 20;
+      var steps = ACTS[kind](a, d, mid, exit), si = 0, cur = null;
+      a.update = function(dt){
+        a.t += dt;
+        if (!cur) {
+          cur = steps[si++];
+          if (!cur) { remove(a); return false; }
+          cur.t = 0;
+          if (cur.start) cur.start();
+        }
+        cur.t += dt;
+        if (cur.tick(dt)) cur = null;
+        put(a);
+        return true;
+      };
+      actors.push(a);
+      return a;
+    }
+
+    // ---- who comes out when ----
+    var onGround = null, groundCount = 0, flyer = null;
+    var nextGround = 2500, nextFlyer = 4500, nextQueen = 26000 + Math.random() * 18000;
+    function spawnGround(){
+      groundCount++;
+      if (groundCount % 3 === 0) { var r = Math.random(); onGround = r < .45 ? slime() : (r < .75 ? moss() : rotten()); }
+      else onGround = pet();
+    }
+    function spawnFlyer(){
+      var r = Math.random();
+      if (r < .55) bumblekin(); else angryBee(r < .8 ? 'angry1' : 'angry2');
+      flyer = actors[actors.length - 1];
     }
 
     var last = performance.now();
     function loop(now){
       var dt = Math.min(40, now - last);
       last = now;
-      nextFlyer -= dt;
-      nextHopper -= dt;
+      if (onGround && onGround.dead) { onGround = null; nextGround = rnd(4500, 8000); }
+      if (flyer && flyer.dead) { flyer = null; nextFlyer = rnd(9000, 16000); }
+      if (!onGround) { nextGround -= dt; if (nextGround <= 0) spawnGround(); }
+      if (!flyer) { nextFlyer -= dt; if (nextFlyer <= 0) spawnFlyer(); }
       nextQueen -= dt;
-
-      if (nextFlyer <= 0 && flyers.length < 1) {
-        spawnFlyer();
-        nextFlyer = 11000 + Math.random()*9000;
+      if (nextQueen <= 0 && (!queen || queen.phase === 'idle')) { showQueen(); nextQueen = 52000 + Math.random() * 40000; }
+      for (var i = actors.length - 1; i >= 0; i--) {
+        if (!actors[i].update(dt)) actors.splice(i, 1);
       }
-      if (nextHopper <= 0 && hoppers.length < 1) {
-        spawnHopper();
-        nextHopper = 14000 + Math.random()*12000;
-      }
-      if (nextQueen <= 0 && (!queen || queen.phase === 'idle')) {
-        showQueen();
-        nextQueen = 52000 + Math.random()*40000;
-      }
-
-      for (var i = flyers.length - 1; i >= 0; i--) {
-        var f = flyers[i];
-        f.x += f.speed * (dt / 1000);
-        place(f.el, f.x, f.y, f.face);
-        tickFrame(f.el, dt);
-        if ((f.speed > 0 && f.x > window.innerWidth + f.w + 8) || (f.speed < 0 && f.x < -f.w - 8)) {
-          f.el.remove();
-          flyers.splice(i, 1);
-        }
-      }
-
-      for (var j = hoppers.length - 1; j >= 0; j--) {
-        var h = hoppers[j];
-        h.life += dt;
-        // Feet stay planted. The hop lives inside the registered frames.
-        tickFrame(h.el, dt);
-        if (h.life > h.max) {
-          h.el.classList.remove('show');
-          (function(node){ setTimeout(function(){ if (node.parentNode) node.remove(); }, 750); })(h.el);
-          hoppers.splice(j, 1);
-        }
-      }
-
-      if (queen && queen.phase !== 'idle') {
-        tickFrame(queen.el, dt);
-        queen.t += dt;
-        var speed = 22;
-        if (queen.phase === 'enter' || queen.phase === 'leave') {
-          var goal = queen.phase === 'enter' ? queen.targetX : (queen.dir > 0 ? window.innerWidth + 180 : -180);
-          var dx = goal - queen.x;
-          var step = speed * (dt / 1000);
-          if (Math.abs(dx) <= step) queen.x = goal;
-          else queen.x += Math.sign(dx) * step;
-          if (queen.phase === 'enter' && queen.x === goal) { queen.phase = 'talk'; queen.t = 0; }
-          if (queen.phase === 'leave' && (queen.x < -170 || queen.x > window.innerWidth + 170)) {
-            queen.wrap.classList.remove('show');
-            queen.phase = 'idle';
-          }
-        } else if (queen.phase === 'talk' && queen.t > 3400) {
-          queen.phase = 'leave';
-        }
-        queen.wrap.style.transform = 'translate3d(' + Math.round(queen.x) + 'px,' + Math.round(queen.y) + 'px,0)';
-      }
-
+      tickQueen(dt);
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
